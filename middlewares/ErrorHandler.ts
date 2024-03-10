@@ -4,7 +4,6 @@ interface ErrorWithStatus extends Error {
   status?: number;
 }
 
-// Middleware pour gérer les erreurs de validation MongoDB
 export const validationErrorHandler = (
   err: any,
   req: Request,

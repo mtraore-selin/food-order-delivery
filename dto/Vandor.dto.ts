@@ -13,3 +13,10 @@ export interface LoginVandorInput {
   password: string;
   email: string;
 }
+
+export interface VandorPayload {
+  _id: string;
+  email: string;
+  name: string;
+  foodTypes: string[];
+}

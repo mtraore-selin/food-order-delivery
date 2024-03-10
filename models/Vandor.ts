@@ -48,17 +48,6 @@ const vandorSchema = new mongoose.Schema(
   }
 );
 
-// Middleware pour hasher le mot de passe avant de sauvegarder dans la base de données
-// vandorSchema.pre("save", async function (next) {
-//   if (!this.isModified("password")) {
-//     return next();
-//   }
-//   const salt = await GenerateSalt();
-//   this.password = await GeneratePassword(this.password, salt);
-//   this.salt = salt;
-//   next();
-// });
-
 const Vandor = mongoose.model<VandorDoc>("vandor", vandorSchema);
 
 export { Vandor };
