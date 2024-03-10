@@ -28,7 +28,7 @@ const vandorSchema = new mongoose.Schema(
     password: { type: String, required: true },
     phone: { type: String, required: true, unique: true },
     salt: { type: String, required: true },
-    serviceAvailable: { type: String, required: true },
+    serviceAvailable: { type: Boolean, required: true },
     coverImages: { type: [String], required: true },
     rating: { type: Number, required: true },
     // foods: [{ type: mongoose.Schema.Types.ObjectId, ref: "food" }],

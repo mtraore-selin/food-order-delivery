@@ -11,8 +11,8 @@ const router = express.Router();
 
 router.post("/login", VandorLogin);
 router.get("/profile", verifyToken, GetVandorProfile);
-router.patch("/profile", UpdateVandorProfile);
-router.patch("/service", UpdateVandorService);
+router.patch("/profile", verifyToken, UpdateVandorProfile);
+router.patch("/service", verifyToken, UpdateVandorService);
 
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
   res.json("Vandor route");
