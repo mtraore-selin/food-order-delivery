@@ -37,6 +37,7 @@ export const CreateVandor = async (
       rating: 0,
       serviceAvailable: false,
       coverImages: [],
+      foods: [],
     };
 
     const createdVandor = await Vandor.create(newVandor);

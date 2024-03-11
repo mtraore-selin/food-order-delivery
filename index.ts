@@ -1,26 +1,16 @@
 import express from "express";
 
-import { AdminRoute, VandorRoute } from "./routes";
-import { connectDatabase } from "./config/database";
-import { errorHandler, validationErrorHandler } from "./middlewares";
+import connectDatabase from "./services/Database";
+import App from "./services/ExpressApp";
 
-const app = express();
+const StartServer = async () => {
+  const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+  await connectDatabase();
 
-app.use("/admin", AdminRoute);
-app.use("/vandor", VandorRoute);
+  await App(app);
 
-connectDatabase();
+  app.listen(8000, () => console.log("Server runing on port 8000"));
+};
 
-// Middleware pour capturer les 404
-app.use((req, res, next) => {
-  res.status(404).json({ message: "Route not found" });
-});
-
-// Middleware d'erreur doit être le dernier middleware utilisé
-app.use(errorHandler);
-app.use(validationErrorHandler);
-
-app.listen(8000, () => console.log("Server runing on port 8000"));
+StartServer();

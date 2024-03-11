@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 
-import { LoginVandorInput, UpdateVandorInput } from "../dto";
+import { CreateFoodInput, LoginVandorInput, UpdateVandorInput } from "../dto";
 import { Vandor } from "../models";
 import {
   ComparePassword,
   GenerateSignature,
 } from "../utility/PasswordGenerate";
+import { Food } from "../models/Food";
 
 const getVandorFromDecodedId = async (req: Request, res: Response) => {
   const vandorId = (req as any)?.decoded?._id;
@@ -112,6 +113,85 @@ export const UpdateVandorService = async (
     res.status(200).json({ message: "Success", data: vandor });
   } catch (error) {
     console.error("Failed to update vandor service:", error);
+    next(error);
+  }
+};
+
+export const AddFood = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const vandor = (await getVandorFromDecodedId(req, res))!;
+
+    const { name, description, foodType, category, readyTime, price } =
+      req.body as CreateFoodInput;
+    const files = req.files as [Express.Multer.File];
+    const images = files.map((f: Express.Multer.File) => f.filename);
+
+    const createdFood = await Food.create({
+      vandorId: vandor._id,
+      name,
+      description,
+      images,
+      foodType,
+      category,
+      readyTime,
+      price,
+      rating: 0,
+    });
+    vandor.foods.push(createdFood);
+
+    await vandor.save();
+
+    res.status(200).json({ message: "Success", data: vandor });
+  } catch (error) {
+    console.error("Failed to update vandor service:", error);
+    next(error);
+  }
+};
+
+export const UpdateVandorCoverImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const vandor = (await getVandorFromDecodedId(req, res))!;
+
+    const files = req.files as [Express.Multer.File];
+
+    if (!files?.length) {
+      return res.status(400).json({ message: "Image is required" });
+    }
+
+    const images = files?.map((f: Express.Multer.File) => f.filename);
+
+    vandor.coverImages.push(...images);
+
+    await vandor.save();
+
+    res.status(200).json({ message: "Success", data: vandor });
+  } catch (error) {
+    console.error("Failed to update vandor service:", error);
+    next(error);
+  }
+};
+
+export const GetFoods = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const vandor = await getVandorFromDecodedId(req, res);
+
+    const foods = await Food.find({ vandorId: vandor?._id });
+
+    res.status(200).json({ message: "Success", data: foods });
+  } catch (error) {
+    console.error("Failed to get vandor profile:", error);
     next(error);
   }
 };

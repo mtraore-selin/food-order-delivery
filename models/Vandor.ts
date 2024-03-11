@@ -1,5 +1,4 @@
 import mongoose, { Document } from "mongoose";
-import { GeneratePassword, GenerateSalt } from "../utility";
 
 interface VandorDoc extends Document {
   name: string;
@@ -12,9 +11,9 @@ interface VandorDoc extends Document {
   phone: string;
   salte: string;
   serviceAvailable: string;
-  coverImage: string[];
+  coverImages: string[];
   rating: number;
-  //   foods: any;
+  foods: any;
 }
 
 const vandorSchema = new mongoose.Schema(
@@ -31,12 +30,11 @@ const vandorSchema = new mongoose.Schema(
     serviceAvailable: { type: Boolean, required: true },
     coverImages: { type: [String], required: true },
     rating: { type: Number, required: true },
-    // foods: [{ type: mongoose.Schema.Types.ObjectId, ref: "food" }],
+    foods: [{ type: mongoose.Schema.Types.ObjectId, ref: "food" }],
   },
   {
     toJSON: {
       transform: function (doc, ret) {
-        // Remove sensitive fields
         delete ret.password;
         delete ret.salt;
         delete ret.__v;
